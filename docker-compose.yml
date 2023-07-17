@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  testproject-docker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    container_name: testproject-docker
+    expose:
+      - '4000'
+    ports:
+      - '4000:8080'
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+    command: npm run dev
+
+  mongodb:
+    image: bitnami/mongodb
+    ports:
+      - '27017:27017'
+    networks:
+      - node-network
+    volumes:
+      - dbdata6:/data/db
+      
+volumes:
+  dbdata6:
+
+networks:
+  node-network:
+    driver: bridge
